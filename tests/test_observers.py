@@ -10,7 +10,7 @@ class TestLoggingObserver:
     
     def test_on_calculation(self):
         """Test logging observer on calculation."""
-        with patch('app.observers.Logger') as mock_logger_class:
+        with patch('app.logger.Logger') as mock_logger_class:
             mock_logger = Mock()
             mock_logger_class.return_value = mock_logger
             
@@ -43,7 +43,7 @@ class TestAutoSaveObserver:
         
         observer = AutoSaveObserver(mock_history_manager)
         
-        with patch('app.observers.Logger') as mock_logger_class:
+        with patch('app.logger.Logger') as mock_logger_class:
             mock_logger = Mock()
             mock_logger_class.return_value = mock_logger
             
@@ -51,4 +51,3 @@ class TestAutoSaveObserver:
             observer.on_calculation(calc)
             
             mock_logger.log_error.assert_called_once()
-

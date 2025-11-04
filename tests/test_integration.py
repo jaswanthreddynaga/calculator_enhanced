@@ -5,6 +5,7 @@ from app.calculator import Calculator
 from app.calculation import Calculation
 from app.history import HistoryManager
 from app.calculator_config import CalculatorConfig
+from app.exceptions import OperationError, ValidationError
 
 
 class TestIntegration:
@@ -52,4 +53,3 @@ class TestIntegration:
             else:
                 result = calculator._process_command(f'{op} 5 3')
             assert result is not None
-

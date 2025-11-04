@@ -78,13 +78,18 @@ class TestCalculatorCaretaker:
     
     def test_redo(self):
         """Test redo functionality."""
+        # Save initial empty state
+        self.caretaker.save_state()
+
         calc = Calculation('add', 1, 2, 3)
         self.originator.add_calculation(calc)
         self.caretaker.save_state()
         
         assert self.caretaker.undo()
         assert len(self.originator.get_history()) == 0
-        assert self.caretaker.redo()
+        assert self.caretaker.undo()
+        assert len(self.originator.get_history()) == 0
+        assert self.caretaker.redo() # Redo to state with 1 calc
         assert len(self.originator.get_history()) == 1
     
     def test_redo_empty(self):
@@ -105,4 +110,3 @@ class TestCalculatorCaretaker:
         self.caretaker.save_state()
         
         assert not self.caretaker.can_redo()
-
