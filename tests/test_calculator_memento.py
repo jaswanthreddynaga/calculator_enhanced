@@ -67,6 +67,7 @@ class TestCalculatorCaretaker:
         
         calc2 = Calculation('subtract', 5, 2, 3)
         self.originator.add_calculation(calc2)
+        self.caretaker.save_state()
         
         assert len(self.originator.get_history()) == 2
         assert self.caretaker.undo()

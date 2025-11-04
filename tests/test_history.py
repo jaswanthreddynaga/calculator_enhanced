@@ -115,6 +115,6 @@ class TestHistoryManager:
         with open(self.config.history_file, 'w') as f:
             f.write("bad,data\n")
         
-        with patch('app.calculation.Calculation.from_dict', side_effect=ValueError("Bad data")):
+        with patch('app.history.Calculation.from_dict', side_effect=ValueError("Bad data")):
             with pytest.raises(HistoryError):
                 self.history_manager.load_from_csv()
