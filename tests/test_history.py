@@ -113,8 +113,9 @@ class TestHistoryManager:
         """Test that loading from CSV raises HistoryError on failure."""
         # Create a dummy file to load
         with open(self.config.history_file, 'w') as f:
-            f.write("bad,data\n")
+            f.write("operation,operand_a,operand_b,result,timestamp\n")
+            f.write("add,invalid,3,5,2023-01-01T00:00:00\n")
         
-        with patch('app.history.Calculation.from_dict', side_effect=ValueError("Bad data")):
+        with patch('app.history.Calculation.from_dict', side_effect=ValueError("Bad data")) as mock_from_dict:
             with pytest.raises(HistoryError):
                 self.history_manager.load_from_csv()
