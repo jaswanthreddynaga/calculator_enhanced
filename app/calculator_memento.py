@@ -73,17 +73,17 @@ class CalculatorCaretaker:
         Returns:
             True if undo was successful, False if nothing to undo
         """
-        if not self._undo_stack:
+        if not self.can_undo():
             return False
-        
-        # Save current state to redo stack
-        current_memento = self.originator.save_state()
-        self._redo_stack.append(current_memento)
-        
-        # Restore previous state
-        previous_memento = self._undo_stack.pop()
+
+        # Move the current state memento to the redo stack
+        current_state_memento = self._undo_stack.pop()
+        self._redo_stack.append(current_state_memento)
+
+        # Restore the previous state
+        previous_memento = self._undo_stack[-1] # Peek
         self.originator.restore_state(previous_memento)
-        
+
         return True
     
     def redo(self) -> bool:
@@ -93,22 +93,21 @@ class CalculatorCaretaker:
         Returns:
             True if redo was successful, False if nothing to redo
         """
-        if not self._redo_stack:
+        if not self.can_redo():
             return False
-        
-        # Save current state to undo stack
-        current_memento = self.originator.save_state()
-        self._undo_stack.append(current_memento)
-        
-        # Restore next state
+
+        # Pop from redo stack and restore
         next_memento = self._redo_stack.pop()
         self.originator.restore_state(next_memento)
-        
+
+        # Push the restored state's memento back to the undo stack
+        self._undo_stack.append(next_memento)
+
         return True
     
     def can_undo(self) -> bool:
         """Check if undo is possible."""
-        return len(self._undo_stack) > 0
+        return len(self._undo_stack) > 1
     
     def can_redo(self) -> bool:
         """Check if redo is possible."""

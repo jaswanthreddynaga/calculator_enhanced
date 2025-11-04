@@ -50,6 +50,7 @@ class TestCalculatorCaretaker:
         """Set up test fixtures."""
         self.originator = CalculatorOriginator()
         self.caretaker = CalculatorCaretaker(self.originator)
+        self.caretaker.save_state()
     
     def test_save_state(self):
         """Test saving state."""

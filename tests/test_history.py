@@ -4,6 +4,7 @@ import os
 import pandas as pd
 import pytest
 from pathlib import Path
+from unittest.mock import patch
 from app.history import HistoryManager
 from app.calculator_config import CalculatorConfig
 from app.calculation import Calculation
