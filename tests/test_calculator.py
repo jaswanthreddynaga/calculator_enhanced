@@ -74,6 +74,7 @@ class TestCalculator:
 
     def test_process_command_clear(self):
         """Test the clear command."""
+        self.calculator.originator.set_history.reset_mock()
         result = self.calculator._process_command('clear')
         assert "History cleared" in result
         self.calculator.history_manager.clear_history.assert_called_once()
@@ -162,8 +163,10 @@ class TestCalculator:
 
     def test_init_load_history_error(self):
         """Test that an error during history loading on init is handled."""
-        with patch('app.calculator.HistoryManager') as mock_hm:
-            mock_hm.return_value.load_from_csv.side_effect = Exception("Bad file")
-            # This should not raise an exception, but log a warning
-            calc = Calculator()
-            calc.logger.log_warning.assert_called_with("Could not load history: Bad file")
+        with patch('app.calculator.Logger') as mock_logger_class:
+            mock_logger_instance = mock_logger_class.return_value
+            with patch('app.calculator.HistoryManager') as mock_hm:
+                mock_hm.return_value.load_from_csv.side_effect = Exception("Bad file")
+                # This should not raise an exception, but log a warning
+                calc = Calculator()
+                mock_logger_instance.log_warning.assert_called_with("Could not load history: Bad file")

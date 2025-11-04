@@ -1,5 +1,6 @@
 """Tests for history management."""
 
+import os
 import pandas as pd
 import pytest
 from pathlib import Path
@@ -99,3 +100,20 @@ class TestHistoryManager:
         self.history_manager.set_history(calcs)
         assert len(self.history_manager.get_history()) == 2
 
+    def test_save_to_csv_fail(self):
+        """Test that saving to CSV raises HistoryError on failure."""
+        calc = Calculation('add', 5, 3, 8)
+        self.history_manager.add_calculation(calc)
+        with patch('pandas.DataFrame.to_csv', side_effect=IOError("Disk full")):
+            with pytest.raises(HistoryError):
+                self.history_manager.save_to_csv()
+
+    def test_load_from_csv_fail(self):
+        """Test that loading from CSV raises HistoryError on failure."""
+        # Create a dummy file to load
+        with open(self.config.history_file, 'w') as f:
+            f.write("bad,data\n")
+        
+        with patch('app.calculation.Calculation.from_dict', side_effect=ValueError("Bad data")):
+            with pytest.raises(HistoryError):
+                self.history_manager.load_from_csv()

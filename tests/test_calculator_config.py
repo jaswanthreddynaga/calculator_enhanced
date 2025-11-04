@@ -31,3 +31,20 @@ class TestCalculatorConfig:
         assert config.log_file == config.log_dir / 'calculator.log'
         assert config.history_file == config.history_dir / 'history.csv'
 
+    def test_config_invalid_max_history(self, monkeypatch):
+        """Test invalid max history size raises error."""
+        monkeypatch.setenv('CALCULATOR_MAX_HISTORY_SIZE', 'invalid')
+        with pytest.raises(ConfigurationError):
+            CalculatorConfig()
+
+    def test_config_invalid_precision(self, monkeypatch):
+        """Test invalid precision raises error."""
+        monkeypatch.setenv('CALCULATOR_PRECISION', 'invalid')
+        with pytest.raises(ConfigurationError):
+            CalculatorConfig()
+
+    def test_config_invalid_max_input(self, monkeypatch):
+        """Test invalid max input value raises error."""
+        monkeypatch.setenv('CALCULATOR_MAX_INPUT_VALUE', 'invalid')
+        with pytest.raises(ConfigurationError):
+            CalculatorConfig()

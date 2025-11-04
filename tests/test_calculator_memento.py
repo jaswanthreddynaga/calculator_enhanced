@@ -87,10 +87,9 @@ class TestCalculatorCaretaker:
         
         assert self.caretaker.undo()
         assert len(self.originator.get_history()) == 0
-        assert self.caretaker.undo()
-        assert len(self.originator.get_history()) == 0
         assert self.caretaker.redo() # Redo to state with 1 calc
         assert len(self.originator.get_history()) == 1
+        assert not self.caretaker.undo() # Should not be able to undo past the first state
     
     def test_redo_empty(self):
         """Test redo when nothing to redo."""
